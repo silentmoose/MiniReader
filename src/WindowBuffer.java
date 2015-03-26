@@ -1,7 +1,7 @@
 /**
  * Created by archie on 3/25/15.
  */
-public class windowBuffer{
+public class WindowBuffer {
     private int numLines;
     private String[] Buffer;
     private int lastString;
@@ -14,10 +14,15 @@ public class windowBuffer{
         this.numLines = numLines;
         this.Buffer= Buffer;
     }
-    void printBuffer(){
+    void printBuffer()
+    {
         for ( int i = lastString; i < 5; i++) {
             System.out.println(Buffer[i]);
         }
+    }
+    void writeBuffer(String Buffer)
+    {
+
     }
 
 
