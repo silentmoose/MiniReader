@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_minireader" default="compile.module.minireader">
+  <dirname property="module.minireader.basedir" file="${ant.file.module_minireader}"/>
+  
+  <property name="module.jdk.home.minireader" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.minireader" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.minireader" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.minireader" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="minireader.output.dir" value="${module.minireader.basedir}/out/production/miniReader"/>
+  <property name="minireader.testoutput.dir" value="${module.minireader.basedir}/out/test/miniReader"/>
+  
+  <path id="minireader.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="minireader.module.production.classpath">
+    <path refid="${module.jdk.classpath.minireader}"/>
+    <pathelement location="${basedir}/resources/epublib-core-3.1-complete.jar"/>
+  </path>
+  
+  <path id="minireader.runtime.production.module.classpath">
+    <pathelement location="${minireader.output.dir}"/>
+    <pathelement location="${basedir}/resources/epublib-core-3.1-complete.jar"/>
+  </path>
+  
+  <path id="minireader.module.classpath">
+    <path refid="${module.jdk.classpath.minireader}"/>
+    <pathelement location="${minireader.output.dir}"/>
+    <pathelement location="${basedir}/resources/epublib-core-3.1-complete.jar"/>
+  </path>
+  
+  <path id="minireader.runtime.module.classpath">
+    <pathelement location="${minireader.testoutput.dir}"/>
+    <pathelement location="${minireader.output.dir}"/>
+    <pathelement location="${basedir}/resources/epublib-core-3.1-complete.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.minireader">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.minireader">
+    <patternset refid="excluded.from.module.minireader"/>
+  </patternset>
+  
+  <path id="minireader.module.sourcepath">
+    <dirset dir="${module.minireader.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.minireader" depends="compile.module.minireader.production,compile.module.minireader.tests" description="Compile module miniReader"/>
+  
+  <target name="compile.module.minireader.production" depends="register.custom.compilers" description="Compile module miniReader; production classes">
+    <mkdir dir="${minireader.output.dir}"/>
+    <javac2 destdir="${minireader.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.minireader}/javac">
+      <compilerarg line="${compiler.args.minireader}"/>
+      <bootclasspath refid="minireader.module.bootclasspath"/>
+      <classpath refid="minireader.module.production.classpath"/>
+      <src refid="minireader.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.minireader"/>
+    </javac2>
+    
+    <copy todir="${minireader.output.dir}">
+      <fileset dir="${module.minireader.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.minireader.tests" depends="register.custom.compilers,compile.module.minireader.production" description="compile module miniReader; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.minireader" description="cleanup module">
+    <delete dir="${minireader.output.dir}"/>
+    <delete dir="${minireader.testoutput.dir}"/>
+  </target>
+</project>
